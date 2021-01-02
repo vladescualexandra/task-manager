@@ -1,4 +1,4 @@
-package data;
+package com.company.database.data;
 
 public enum Status {
 
