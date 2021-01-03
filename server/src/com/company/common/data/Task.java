@@ -1,20 +1,15 @@
-package com.company.database.data;
+package com.company.common.data;
 
-import java.sql.Date;
+import java.io.Serializable;
 
-public class Task {
+public class Task implements Serializable {
 
     private String id;
     private String summary;
     private String description;
     private Severity severity;
     private Status status;
-    private String project;
 
-
-    public Task(String id) {
-        this.id = id;
-    }
 
     public Task() {
 
@@ -24,14 +19,12 @@ public class Task {
                 String summary,
                 String description,
                 Severity severity,
-                Status status,
-                String project) {
+                Status status) {
         this.id = id;
         this.summary = summary;
         this.description = description;
         this.severity = severity;
         this.status = status;
-        this.project = project;
     }
 
     public void setId(String id) {
@@ -66,6 +59,14 @@ public class Task {
         this.severity = severity;
     }
 
+    public void setSeverity(String severity) {
+        switch (severity) {
+            case "URGENT" -> this.setSeverity(Severity.URGENT);
+            case "IMPORTANT" -> this.setSeverity(Severity.IMPORTANT);
+            default -> this.setSeverity(Severity.TRIVIAL);
+        }
+    }
+
     public Status getStatus() {
         return status;
     }
@@ -74,12 +75,24 @@ public class Task {
         this.status = status;
     }
 
-    public String getProject() {
-        return project;
+    public void setStatus(String status) {
+
+        switch (status) {
+            case "IN PROGRESS" -> this.setStatus(Status.IN_PROGRESS);
+            case "DONE" -> this.setStatus(Status.DONE);
+            default -> this.setStatus(Status.NOT_STARTED);
+        }
     }
 
-    public void setProject(String project) {
-        this.project = project;
-    }
 
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id='" + id + '\'' +
+                ", summary='" + summary + '\'' +
+                ", description='" + description + '\'' +
+                ", severity=" + severity +
+                ", status=" + status +
+                '}';
+    }
 }

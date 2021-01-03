@@ -3,14 +3,14 @@ package com.company;
 import com.company.common.Transport;
 import com.company.database.Database;
 import com.company.database.Interrogation;
-import com.company.database.data.Severity;
-import com.company.database.data.Status;
-import com.company.database.data.Task;
+import com.company.common.data.Severity;
+import com.company.common.data.Status;
+import com.company.common.data.Task;
 
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,64 +30,86 @@ public class Server implements AutoCloseable {
 
     public void start(int port) throws IOException {
         stop();
-        serverSocket = new ServerSocket(port);
-        executorService = Executors.newFixedThreadPool(50 * Runtime.getRuntime().availableProcessors());
-        final List<Socket> clients = Collections.synchronizedList(new ArrayList<>());
-        executorService.execute(() -> {
-            while (serverSocket != null && !serverSocket.isClosed()) {
-                try {
-                    final Socket socket = serverSocket.accept();
+        if (Database.openConnection()) {
+            serverSocket = new ServerSocket(port);
+            executorService = Executors.newFixedThreadPool(50 * Runtime.getRuntime().availableProcessors());
+            final List<Socket> clients = Collections.synchronizedList(new ArrayList<>());
+            executorService.execute(() -> {
+                while (serverSocket != null && !serverSocket.isClosed()) {
+                    try {
+                        final Socket socket = serverSocket.accept();
 
-                    executorService.submit(() -> {
-                        try {
-                            clients.add(socket);
-                            while (socket != null && !socket.isClosed()) {
-                                try {
+                        executorService.submit(() -> {
+                            try {
+                                clients.add(socket);
 
-                                    String message = Transport.receive(socket);
-                                    System.out.println(message);
-
-                                    System.out.println(clients.size());
-                                    clients.forEach(client -> {
-                                        try {
-                                            if (Database.openConnection()) {
-                                                Task task = new Task();
-                                                task.setId(message);
-                                                task.setSummary("Project");
-                                                task.setDescription("Issues and all u kno");
-                                                task.setSeverity(Severity.IMPORTANT);
-                                                task.setStatus(Status.ACTIVE);
-
-                                                Interrogation.insertRow(task);
-                                                Transport.send(Interrogation.printTable(), client);
-                                                Database.closeConnection();
-                                            } else {
-                                                Transport.send("Could not connect to the DB.", client);
+                                while (socket != null && !socket.isClosed()) {
+                                    try {
+                                        clients.forEach(client -> {
+                                            List<Task> taskList = new ArrayList<>(Interrogation.returnTable());
+                                            for (Task task : taskList) {
+                                                try {
+                                                    Transport.send(task.toString(), client);
+                                                } catch (IOException e) {
+                                                }
                                             }
-//                                            Transport.send(message, client);
-                                        } catch (Exception e) {
-//                                            System.err.println("Error 1: " + e.getMessage());
-                                        }
-                                    });
+                                        });
+                                        String message = Transport.receive(socket);
+                                        clients.forEach(client -> {
+                                            try {
+                                                switch (message) {
+                                                    case "insert":
+//                                                        Transport.send("INSERT", client);
+                                                        System.out.println("INSERT");
+                                                        break;
+                                                    case "update":
+//                                                        Transport.send("UPDATE", client);
+                                                        System.out.println("UPDATE");
+                                                        break;
+                                                    case "delete":
+//                                                        Transport.send("DELETE", client);
+                                                        System.out.println("DELETE");
+                                                        break;
+                                                    default:
+                                                        break;
+                                                }
 
-                                } catch (Exception e) {
-//                                    System.err.println("Error 2: " + e.getMessage());
+//
+//                                                for (Task task : taskList) {
+//                                                    Transport.send(task.toString(), client);
+//                                                }
+                                            } catch (Exception e) {
+//                                                System.err.println("Error 1: " + e.getMessage());
+                                            }
+                                        });
+                                        System.out.println(message);
+                                    } catch (Exception e) {
+//                                        System.err.println("Error 2: " + e.getMessage());
+                                    }
                                 }
+
+                            } catch (Exception e) {
+                                System.err.println("Error 3: " + e.getMessage());
+                            } finally {
+                                clients.remove(socket);
                             }
-                        } catch (Exception e) {
-//                            System.err.println("Error 3: " + e.getMessage());
-                        } finally {
-                            clients.remove(socket);
-                        }
-                    });
-                } catch (Exception e) {
-//                    System.err.println("Error 4: " + e.getMessage());
+                        });
+                    } catch (Exception e) {
+                        System.err.println("Error 4: " + e.getMessage());
+                    }
                 }
-            }
-        });
+            });
+
+
+        } else {
+            System.out.println("Could not connect to the database.");
+        }
     }
 
     public void stop() throws IOException {
+
+        Database.closeConnection();
+
         if (executorService != null) {
             executorService.shutdown();
             executorService = null;

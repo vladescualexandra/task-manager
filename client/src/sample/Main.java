@@ -16,7 +16,7 @@ public class Main extends Application {
         FXMLLoader loader =  new FXMLLoader(getClass().getResource("sample.fxml"));
         Parent root = loader.load();
         primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.setScene(new Scene(root, 800, 500));
 
         Controller controller = loader.getController();
         primaryStage.setOnHiding(e -> controller.shutdown());

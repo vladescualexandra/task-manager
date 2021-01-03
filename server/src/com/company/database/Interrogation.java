@@ -1,24 +1,56 @@
 package com.company.database;
 
-import com.company.database.data.Severity;
-import com.company.database.data.Status;
-import com.company.database.data.Task;
-import com.company.database.data.Username;
+import com.company.common.data.Task;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Interrogation extends Database {
 
-    public static void main(String[] args) {
 
-        if (openConnection()) {
 
-        } else {
-            System.err.println("Could not connect to the database.");
+    /*  Columns
+     *         1: id
+     *         2: summary
+     *         3: description
+     *         4: severity
+     *         5: status
+     *
+     */
+
+    /*
+            RETURN LIST OF ROWS
+     */
+
+    public static List<Task> returnTable() {
+        List<Task> result = new ArrayList<>();
+        try {
+            statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+
+            resultSet = statement.executeQuery("SELECT * FROM " + Database.TABLE_TASKS);
+
+            resultSet.beforeFirst();
+
+            while (resultSet.next()) {
+
+                Task task = new Task();
+                task.setId(resultSet.getString(1));
+                task.setId(resultSet.getString(2));
+                task.setDescription(resultSet.getString(3));
+                task.setSeverity(resultSet.getString(4));
+                task.setStatus(resultSet.getString(5));
+
+                result.add(task);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("returnTable: " + e.getMessage());
         }
-    }
 
+        return result;
+    }
 
     /*
      *               PRINT TABLE
@@ -59,8 +91,8 @@ public class Interrogation extends Database {
     }
 
     /*
-    *   RETURN ARRAY LIST OF TASKS
-    */
+     *   RETURN ARRAY LIST OF TASKS
+     */
 
     /*
      *       INSERT ROWS
@@ -95,16 +127,16 @@ public class Interrogation extends Database {
 
 
     /*
-    *   PRINT FILTERED TABLE
-    *
-    *  Columns
-    *         1: id
-    *         2: summary
-    *         3: description
-    *         4: severity
-    *         5: status
-    *
-    */
+     *   PRINT FILTERED TABLE
+     *
+     *  Columns
+     *         1: id
+     *         2: summary
+     *         3: description
+     *         4: severity
+     *         5: status
+     *
+     */
 
     private static String getQuery(int[] columns, String[] values) {
         StringBuilder query = new StringBuilder("SELECT * FROM " + TABLE_TASKS);

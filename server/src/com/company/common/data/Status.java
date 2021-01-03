@@ -1,10 +1,9 @@
-package com.company.database.data;
+package com.company.common.data;
 
 public enum Status {
 
     NOT_STARTED ("NOT STARTED"),
     IN_PROGRESS ("IN PROGRESS"),
-    ACTIVE ("ACTIVE"),
     DONE ("DONE");
 
     private String status;

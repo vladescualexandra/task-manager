@@ -1,4 +1,4 @@
-package com.company.database.data;
+package common.data;
 
 public enum Severity {
 
@@ -18,4 +18,5 @@ public enum Severity {
     public String toString() {
         return severity;
     }
+
 }

@@ -34,18 +34,12 @@ public class Database {
                                 + COLUMN_TASKS_STATUS + " varchar(10))";
 
 
-    public static void main(String[] args) {
-
-
-        if (openConnection()) {
-
-
-            createTables();
-            closeConnection();
-        } else {
-            System.err.println("Could not connect to the database.");
-        }
-    }
+//    public static void main(String[] args)  {
+//        if (openConnection()) {
+//            createTables();
+//            closeConnection();
+//        }
+//    }
 
 
     public static boolean openConnection() {
@@ -84,6 +78,7 @@ public class Database {
    private static void createTables() {
         try {
             statement = connection.createStatement();
+            statement.execute("DROP TABLE " + TABLE_TASKS);
             statement.execute(CREATE_TABLE_TASKS);
 
         } catch (SQLException e) {
