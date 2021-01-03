@@ -34,55 +34,55 @@ public class Server implements AutoCloseable {
             serverSocket = new ServerSocket(port);
             executorService = Executors.newFixedThreadPool(50 * Runtime.getRuntime().availableProcessors());
             final List<Socket> clients = Collections.synchronizedList(new ArrayList<>());
+
             executorService.execute(() -> {
                 while (serverSocket != null && !serverSocket.isClosed()) {
                     try {
                         final Socket socket = serverSocket.accept();
-
                         executorService.submit(() -> {
                             try {
                                 clients.add(socket);
-
                                 while (socket != null && !socket.isClosed()) {
                                     try {
                                         clients.forEach(client -> {
-                                            List<Task> taskList = new ArrayList<>(Interrogation.returnTable());
-                                            for (Task task : taskList) {
-                                                try {
+                                            try {
+                                                Transport.send("clear", client);
+                                                for (Task task : Interrogation.returnTable()) {
                                                     Transport.send(task.toString(), client);
-                                                } catch (IOException e) {
                                                 }
+                                            } catch (IOException e) {
                                             }
                                         });
                                         String message = Transport.receive(socket);
                                         clients.forEach(client -> {
                                             try {
-                                                switch (message) {
-                                                    case "insert":
-//                                                        Transport.send("INSERT", client);
-                                                        System.out.println("INSERT");
+
+
+                                                int i = Integer.parseInt(message.substring(0, 1));
+                                                switch (i) {
+                                                    case 1:
+                                                        Task task = Task.convertToTask(message.substring(1));
+                                                        Interrogation.insertRow(task);
                                                         break;
-                                                    case "update":
-//                                                        Transport.send("UPDATE", client);
-                                                        System.out.println("UPDATE");
+                                                    case 2:
+                                                        Task task1 = Task.convertToTask(message.substring(1));
+                                                        Interrogation.updateRow(task1);
                                                         break;
-                                                    case "delete":
-//                                                        Transport.send("DELETE", client);
-                                                        System.out.println("DELETE");
+                                                    case 3:
+                                                        Interrogation.deleteRow(message.substring(1));
                                                         break;
                                                     default:
+                                                        System.out.println("default");
                                                         break;
                                                 }
+                                                for (Task task : Interrogation.returnTable()) {
+                                                    Transport.send(task.toString(), client);
+                                                }
 
-//
-//                                                for (Task task : taskList) {
-//                                                    Transport.send(task.toString(), client);
-//                                                }
                                             } catch (Exception e) {
 //                                                System.err.println("Error 1: " + e.getMessage());
                                             }
                                         });
-                                        System.out.println(message);
                                     } catch (Exception e) {
 //                                        System.err.println("Error 2: " + e.getMessage());
                                     }

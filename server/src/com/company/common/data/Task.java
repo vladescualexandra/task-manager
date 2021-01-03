@@ -95,4 +95,44 @@ public class Task implements Serializable {
                 ", status=" + status +
                 '}';
     }
+
+    public static Task convertToTask(String message) {
+        Task task = new Task();
+        if (message != null && !message.isEmpty()) {
+
+            int startIndexOfId = "Task{id='".length();
+            int endIndexOfId = message.indexOf("', summary='");
+
+            String id = message.substring(startIndexOfId, endIndexOfId);
+
+            int startIndexOfSummary = endIndexOfId + "', summary='".length();
+            int endIndexOfSummary = message.indexOf("', description='");
+
+            String summary = message.substring(startIndexOfSummary, endIndexOfSummary);
+
+            int startIndexOfDescription = endIndexOfSummary + "', description='".length();
+            int endIndexOfDescription = message.indexOf("', severity=");
+
+            String description = message.substring(startIndexOfDescription, endIndexOfDescription);
+
+            int startIndexOfSeverity = endIndexOfDescription + "', severity=".length();
+            int endIndexOfSeverity = message.indexOf(", status=");
+
+            String severity = message.substring(startIndexOfSeverity, endIndexOfSeverity);
+
+            int startIndexOfStatus = endIndexOfSeverity + ", status=".length();
+            int endIndexOfStatus = message.indexOf("}");
+
+            String status = message.substring(startIndexOfStatus, endIndexOfStatus);
+
+            task.setId(id);
+            task.setSummary(summary);
+            task.setDescription(description);
+            task.setSeverity(severity);
+            task.setStatus(status);
+
+        }
+        return task;
+
+    }
 }

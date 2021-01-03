@@ -27,11 +27,11 @@ public class Database {
 
 
     private static final String CREATE_TABLE_TASKS = "CREATE TABLE " +
-                TABLE_TASKS + " (" + COLUMN_TASKS_ID + " varchar(10) primary key, "
-                                + COLUMN_TASKS_SUMMARY + " varchar(30), "
+                TABLE_TASKS + " (" + COLUMN_TASKS_ID + " varchar(20) primary key, "
+                                + COLUMN_TASKS_SUMMARY + " varchar(50), "
                                 + COLUMN_TASKS_DESCRIPTION + " varchar(500), "
-                                + COLUMN_TASKS_SEVERITY + " varchar(10), "
-                                + COLUMN_TASKS_STATUS + " varchar(10))";
+                                + COLUMN_TASKS_SEVERITY + " varchar(50), "
+                                + COLUMN_TASKS_STATUS + " varchar(50))";
 
 
 //    public static void main(String[] args)  {
@@ -49,6 +49,7 @@ public class Database {
             return true;
         } catch (SQLException e) {
             System.err.println("openConnection: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }

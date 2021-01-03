@@ -37,7 +37,7 @@ public class Interrogation extends Database {
 
                 Task task = new Task();
                 task.setId(resultSet.getString(1));
-                task.setId(resultSet.getString(2));
+                task.setSummary(resultSet.getString(2));
                 task.setDescription(resultSet.getString(3));
                 task.setSeverity(resultSet.getString(4));
                 task.setStatus(resultSet.getString(5));
@@ -90,9 +90,6 @@ public class Interrogation extends Database {
         return result.toString();
     }
 
-    /*
-     *   RETURN ARRAY LIST OF TASKS
-     */
 
     /*
      *       INSERT ROWS
@@ -121,6 +118,36 @@ public class Interrogation extends Database {
             return true;
         } catch (SQLException e) {
             System.err.println("insertRow: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public static boolean updateRow(Task task) {
+
+        try {
+            String query = "UPDATE " + TABLE_TASKS + " SET "
+                    + COLUMN_TASKS_SUMMARY + " = ? , "
+                    + COLUMN_TASKS_DESCRIPTION + " = ? , "
+                    + COLUMN_TASKS_SEVERITY + " = ? , "
+                    + COLUMN_TASKS_STATUS + " = ? "
+                    + "WHERE " + COLUMN_TASKS_ID
+                    + " LIKE '%" + task.getId() + "%'";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setString(1, task.getSummary());
+            preparedStatement.setString(2, task.getDescription());
+            preparedStatement.setString(3, task.getSeverity().toString());
+            preparedStatement.setString(4, task.getStatus().toString());
+
+            preparedStatement.execute();
+
+            preparedStatement.close();
+
+
+            return true;
+        } catch (SQLException e) {
+            System.err.println("updateRow: " + e.getMessage());
             return false;
         }
     }
@@ -168,17 +195,24 @@ public class Interrogation extends Database {
                 if (i < columns.length - 1) {
                     query.append(" AND ");
                 }
-
             }
-
-
         }
-
-
-        System.out.println(query.toString());
-
         return query.toString();
     }
 
 
+    public static void deleteRow(String id) {
+        try {
+
+            StringBuilder query = new StringBuilder("DELETE FROM " + TABLE_TASKS + " WHERE ");
+            query.append(COLUMN_TASKS_ID + " LIKE '%").append(id).append("%'");
+
+            statement = connection.createStatement();
+            statement.execute(query.toString());
+
+            System.out.println(printTable());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
 }
