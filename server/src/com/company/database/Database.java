@@ -22,51 +22,42 @@ public class Database {
     public static final String COLUMN_TASKS_DESCRIPTION = "description";
     public static final String COLUMN_TASKS_SEVERITY = "severity";
     public static final String COLUMN_TASKS_STATUS = "status";
-    public static final String COLUMN_TASKS_PROJECT = "project_name";
-    public static final String COLUMN_TASKS_ASSIGNED_TO = "assigned_to";
-    public static final String COLUMN_TASKS_CREATED = "created";
-    public static final String COLUMN_TASKS_CLOSED = "closed";
-    public static final String COLUMN_TASKS_CREATED_BY = "created_by";
+
 
 
 
     private static final String CREATE_TABLE_TASKS = "CREATE TABLE " +
-                TABLE_TASKS + " (" + COLUMN_TASKS_ID + " varchar(10) primary key, "
-                                + COLUMN_TASKS_SUMMARY + " varchar(30), "
+                TABLE_TASKS + " (" + COLUMN_TASKS_ID + " varchar(20) primary key, "
+                                + COLUMN_TASKS_SUMMARY + " varchar(50), "
                                 + COLUMN_TASKS_DESCRIPTION + " varchar(500), "
-                                + COLUMN_TASKS_SEVERITY + " varchar(10), "
-                                + COLUMN_TASKS_STATUS + " varchar(10), "
-                                + COLUMN_TASKS_PROJECT + " varchar(15), "
-                                + COLUMN_TASKS_ASSIGNED_TO + " varchar(20), "
-                                + COLUMN_TASKS_CREATED + " date, "
-                                + COLUMN_TASKS_CLOSED + " date, "
-                                + COLUMN_TASKS_CREATED_BY + " varchar(20))";
-
-    public static void main(String[] args) {
+                                + COLUMN_TASKS_SEVERITY + " varchar(50), "
+                                + COLUMN_TASKS_STATUS + " varchar(50))";
 
 
-        if (openConnection()) {
-            createTables();
-            closeConnection();
-        } else {
-            System.err.println("Could not connect to the database.");
-        }
-
-    }
+//    public static void main(String[] args)  {
+//        if (openConnection()) {
+//            createTables();
+//            closeConnection();
+//        }
+//    }
 
 
     public static boolean openConnection() {
         try {
+            System.out.println("Open connection to DB.");
             connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
             return true;
         } catch (SQLException e) {
             System.err.println("openConnection: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
-   }
+    }
 
     public static void closeConnection() {
         try {
+            System.out.println("Close connection to DB.");
+
             if (statement != null)
                 statement.close();
 
@@ -88,7 +79,7 @@ public class Database {
    private static void createTables() {
         try {
             statement = connection.createStatement();
-
+            statement.execute("DROP TABLE " + TABLE_TASKS);
             statement.execute(CREATE_TABLE_TASKS);
 
         } catch (SQLException e) {

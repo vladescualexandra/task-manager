@@ -13,7 +13,6 @@ public class Main {
             try (Scanner scanner = new Scanner(System.in)) {
                 while (true) {
                     String command = scanner.nextLine();
-                    System.out.println("echo: " + command);
                     if (command == null || "exit".equalsIgnoreCase(command)) {
                         break;
                     }
