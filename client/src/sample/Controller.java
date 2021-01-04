@@ -2,6 +2,7 @@ package sample;
 
 import common.Settings;
 import common.data.Task;
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,6 +21,9 @@ import java.util.List;
 
 
 public class Controller {
+
+    @FXML
+    TextField search;
     @FXML
     Label error;
     @FXML
@@ -46,6 +50,7 @@ public class Controller {
 
     Client client;
     List<Task> taskList = new ArrayList<>();
+    List<Task> filteredList;
 
 
     public void initialize() throws IOException {
@@ -56,6 +61,13 @@ public class Controller {
         setContextMenu();
 
         add.setOnAction(addTaskEvent());
+
+        search.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                filterList();
+            }
+        });
 
         client = new Client(Settings.HOST,
                 Settings.PORT, message -> {
@@ -258,22 +270,63 @@ public class Controller {
         };
     }
 
+
     private EventHandler<ActionEvent> filterSeverityEvent(int i) {
         return new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 severity.setText(convertSeverity(i));
+                filterList();
             }
         };
     }
+
 
     private EventHandler<ActionEvent> filterStatusEvent(int i) {
         return new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 status.setText(convertStatus(i));
+                filterList();
             }
         };
+    }
+
+    private void filterList() {
+        filteredList = new ArrayList<>(taskList);
+
+        for (Task task : taskList) {
+
+            if (!search.getText().trim().equals("")) {
+                if (!task.getId().contains(search.getText())
+                        && !task.getSummary().contains(search.getText())
+                        && !task.getDescription().contains(search.getText())) {
+                    filteredList.remove(task);
+                }
+            }
+
+            if (!severity.getText().equals("no severity")
+                    && !severity.getText().equals("severity")) {
+                if (!task.getSeverity().toString().equals(severity.getText())) {
+                    filteredList.remove(task);
+                }
+            }
+
+            if (!status.getText().equals("no status")
+                    && !status.getText().equals("status")) {
+                if (!task.getStatus().toString().equals(status.getText())) {
+                    filteredList.remove(task);
+                }
+            }
+
+        }
+
+        System.out.println(filteredList.size());
+
+        ObservableList<Task> obsList = FXCollections.observableArrayList(filteredList);
+        list.setItems(obsList);
+
+
     }
 
     private String convertStatus(int i) {
@@ -302,7 +355,6 @@ public class Controller {
             TableColumn<Task, String> column = new TableColumn<>(s);
             column.setCellValueFactory(new PropertyValueFactory<>(s));
             list.getColumns().add(column);
-
         }
     }
 
