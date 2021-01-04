@@ -18,7 +18,7 @@ public class Main extends Application {
         FXMLLoader loader =  new FXMLLoader(getClass().getResource("sample.fxml"));
         Parent root = loader.load();
         primaryStage.setTitle("Task Manager");
-        Scene scene = new Scene(root, 600, 500);
+        Scene scene = new Scene(root, 600, 550);
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
 
@@ -27,6 +27,7 @@ public class Main extends Application {
 
         scene.getStylesheets().add("sample/style.css");
         primaryStage.getIcons().add(new Image("sample/task.png"));
+
 
         primaryStage.show();
     }
