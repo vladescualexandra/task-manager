@@ -5,8 +5,10 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
 
 public class Main extends Application {
 
@@ -15,12 +17,16 @@ public class Main extends Application {
 
         FXMLLoader loader =  new FXMLLoader(getClass().getResource("sample.fxml"));
         Parent root = loader.load();
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 800, 500));
+        primaryStage.setTitle("Task Manager");
+        Scene scene = new Scene(root, 600, 500);
+        primaryStage.setScene(scene);
         primaryStage.setResizable(false);
 
         Controller controller = loader.getController();
         primaryStage.setOnHiding(e -> controller.shutdown());
+
+        scene.getStylesheets().add("sample/style.css");
+        primaryStage.getIcons().add(new Image("sample/task.png"));
 
         primaryStage.show();
     }
