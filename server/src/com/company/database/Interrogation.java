@@ -141,9 +141,7 @@ public class Interrogation extends Database {
             preparedStatement.setString(4, task.getStatus().toString());
 
             preparedStatement.execute();
-
             preparedStatement.close();
-
 
             return true;
         } catch (SQLException e) {
@@ -175,21 +173,11 @@ public class Interrogation extends Database {
             for (int i = 0; i < columns.length; i++) {
 
                 switch (columns[i]) {
-                    case 1:
-                        query.append(COLUMN_TASKS_ID + " = '").append(values[i]).append("'");
-                        break;
-                    case 2:
-                        query.append(COLUMN_TASKS_SUMMARY + " LIKE '%").append(values[i]).append("%'");
-                        break;
-                    case 3:
-                        query.append(COLUMN_TASKS_DESCRIPTION + " LIKE '%").append(values[i]).append("%'");
-                        break;
-                    case 4:
-                        query.append(COLUMN_TASKS_SEVERITY + " = '").append(values[i]).append("'");
-                        break;
-                    case 5:
-                        query.append(COLUMN_TASKS_STATUS + " = '").append(values[i]).append("'");
-                        break;
+                    case 1 -> query.append(COLUMN_TASKS_ID + " = '").append(values[i]).append("'");
+                    case 2 -> query.append(COLUMN_TASKS_SUMMARY + " LIKE '%").append(values[i]).append("%'");
+                    case 3 -> query.append(COLUMN_TASKS_DESCRIPTION + " LIKE '%").append(values[i]).append("%'");
+                    case 4 -> query.append(COLUMN_TASKS_SEVERITY + " = '").append(values[i]).append("'");
+                    case 5 -> query.append(COLUMN_TASKS_STATUS + " = '").append(values[i]).append("'");
                 }
 
                 if (i < columns.length - 1) {
@@ -204,13 +192,9 @@ public class Interrogation extends Database {
     public static void deleteRow(String id) {
         try {
 
-            StringBuilder query = new StringBuilder("DELETE FROM " + TABLE_TASKS + " WHERE ");
-            query.append(COLUMN_TASKS_ID + " LIKE '%").append(id).append("%'");
-
             statement = connection.createStatement();
-            statement.execute(query.toString());
+            statement.execute("DELETE FROM " + TABLE_TASKS + " WHERE " + COLUMN_TASKS_ID + " LIKE '%" + id + "%'");
 
-            System.out.println(printTable());
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

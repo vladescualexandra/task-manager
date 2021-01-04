@@ -17,6 +17,7 @@ public class Main extends Application {
         Parent root = loader.load();
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(new Scene(root, 800, 500));
+        primaryStage.setResizable(false);
 
         Controller controller = loader.getController();
         primaryStage.setOnHiding(e -> controller.shutdown());

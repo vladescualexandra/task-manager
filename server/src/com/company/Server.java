@@ -54,37 +54,41 @@ public class Server implements AutoCloseable {
                                             }
                                         });
                                         String message = Transport.receive(socket);
+                                        System.out.println(message);
+
+                                        int i = Integer.parseInt(message.substring(0, 1));
+                                        switch (i) {
+                                            case 0:
+                                                clients.remove(socket);
+                                                break;
+                                            case 1:
+                                                Task task = Task.convertToTask(message.substring(1));
+                                                Interrogation.insertRow(task);
+                                                break;
+                                            case 2:
+                                                Task task1 = Task.convertToTask(message.substring(1));
+                                                Interrogation.updateRow(task1);
+                                                break;
+                                            case 3:
+                                                Interrogation.deleteRow(message.substring(1));
+                                                break;
+                                            default:
+                                                System.out.println("default");
+                                                break;
+                                        }
                                         clients.forEach(client -> {
                                             try {
-
-
-                                                int i = Integer.parseInt(message.substring(0, 1));
-                                                switch (i) {
-                                                    case 1:
-                                                        Task task = Task.convertToTask(message.substring(1));
-                                                        Interrogation.insertRow(task);
-                                                        break;
-                                                    case 2:
-                                                        Task task1 = Task.convertToTask(message.substring(1));
-                                                        Interrogation.updateRow(task1);
-                                                        break;
-                                                    case 3:
-                                                        Interrogation.deleteRow(message.substring(1));
-                                                        break;
-                                                    default:
-                                                        System.out.println("default");
-                                                        break;
+                                                for (Task t : Interrogation.returnTable()) {
+                                                    Transport.send(t.toString(), client);
                                                 }
-                                                for (Task task : Interrogation.returnTable()) {
-                                                    Transport.send(task.toString(), client);
-                                                }
-
                                             } catch (Exception e) {
-//                                                System.err.println("Error 1: " + e.getMessage());
+                                                System.err.println("Error 1: " + e.getMessage());
                                             }
                                         });
                                     } catch (Exception e) {
 //                                        System.err.println("Error 2: " + e.getMessage());
+//                                        e.printStackTrace();
+                                        break;
                                     }
                                 }
 

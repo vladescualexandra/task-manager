@@ -11,7 +11,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Border;
 
+import javax.management.Notification;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +58,8 @@ public class Controller {
         client = new Client(Settings.HOST,
                 Settings.PORT, message -> {
 
+            System.out.println(message);
+
             if (message.equalsIgnoreCase("clear")) {
                 taskList.clear();
             }
@@ -76,7 +80,7 @@ public class Controller {
         return new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                if (add_id.getText() != null || !add_id.getText().equalsIgnoreCase("")) {
+                if (!add_id.getText().equals("")) {
                     if (!add_summary.getText().equalsIgnoreCase("")) {
                         if (!add_description.getText().equalsIgnoreCase("")) {
                             Task task = new Task();
@@ -91,16 +95,21 @@ public class Controller {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
+                        } else {
+                            System.out.println("Empty description.");
                         }
+                    } else {
+                        System.out.println("Empty summary.");
                     }
+                } else {
+                    System.out.println("Empty id.");
                 }
             }
         };
     }
 
     /*
-       -1 - disconnect
-        0 - refresh list
+        0 - disconnect
         1 - insert
         2 - update
         3 - delete
@@ -276,7 +285,7 @@ public class Controller {
 
     public void shutdown() {
         try {
-            client.send("-1");
+            client.send("0");
         } catch (IOException e) {
             e.printStackTrace();
         }
