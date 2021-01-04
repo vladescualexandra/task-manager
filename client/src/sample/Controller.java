@@ -21,6 +21,8 @@ import java.util.List;
 
 public class Controller {
     @FXML
+    Label error;
+    @FXML
     MenuButton add_status;
     @FXML
     MenuButton add_severity;
@@ -58,7 +60,6 @@ public class Controller {
         client = new Client(Settings.HOST,
                 Settings.PORT, message -> {
 
-            System.out.println(message);
 
             if (message.equalsIgnoreCase("clear")) {
                 taskList.clear();
@@ -81,31 +82,50 @@ public class Controller {
             @Override
             public void handle(ActionEvent actionEvent) {
                 if (!add_id.getText().equals("")) {
-                    if (!add_summary.getText().equalsIgnoreCase("")) {
-                        if (!add_description.getText().equalsIgnoreCase("")) {
-                            Task task = new Task();
-                            task.setId(add_id.getText().trim());
-                            task.setSummary(add_summary.getText().trim());
-                            task.setDescription(add_description.getText().trim());
-                            task.setSeverity(add_severity.getText());
-                            task.setStatus(add_status.getText());
 
-                            try {
-                                client.send("1" + task.toString());
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                    List<String> ids = new ArrayList<>();
+                    for (Task t : taskList) {
+                        ids.add(t.getId());
+                    }
+
+                    if (ids.contains(add_id.getText().trim())) {
+                        error.setVisible(true);
+                        error.setText("Id already exists.");
+                    } else {
+                        if (!add_summary.getText().equalsIgnoreCase("")) {
+                            if (!add_description.getText().equalsIgnoreCase("")) {
+                                addTask();
+                            } else {
+                                error.setVisible(true);
+                                error.setText("Empty description.");
                             }
                         } else {
-                            System.out.println("Empty description.");
+                            error.setVisible(true);
+                            error.setText("Empty summary.");
                         }
-                    } else {
-                        System.out.println("Empty summary.");
                     }
                 } else {
-                    System.out.println("Empty id.");
+                    error.setVisible(true);
+                    error.setText("Empty id.");
                 }
             }
         };
+    }
+
+    private void addTask() {
+        Task task = new Task();
+        task.setId(add_id.getText().trim());
+        task.setSummary(add_summary.getText().trim());
+        task.setDescription(add_description.getText().trim());
+        task.setSeverity(add_severity.getText());
+        task.setStatus(add_status.getText());
+
+        try {
+            client.send("1" + task.toString());
+            cleanView();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /*
@@ -164,6 +184,7 @@ public class Controller {
 
     private void populateView(Task selectedItem) {
         add_id.setText(selectedItem.getId());
+        add_id.setDisable(true);
         add_summary.setText(selectedItem.getSummary());
         add_description.setText(selectedItem.getDescription());
         add_severity.setText(selectedItem.getSeverity().toString());
@@ -189,11 +210,13 @@ public class Controller {
 
     private void cleanView() {
         add_id.setText("");
+        add_id.setDisable(false);
         add_summary.setText("");
         add_description.setText("");
         add_severity.setText("severity");
         add_status.setText("status");
         add.setText("add a new task");
+        error.setVisible(false);
     }
 
 

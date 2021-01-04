@@ -3,11 +3,8 @@ package com.company;
 import com.company.common.Transport;
 import com.company.database.Database;
 import com.company.database.Interrogation;
-import com.company.common.data.Severity;
-import com.company.common.data.Status;
 import com.company.common.data.Task;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -51,10 +48,10 @@ public class Server implements AutoCloseable {
                                                     Transport.send(task.toString(), client);
                                                 }
                                             } catch (IOException e) {
+                                                System.err.println("Error 0: " + e.getMessage());
                                             }
                                         });
                                         String message = Transport.receive(socket);
-                                        System.out.println(message);
 
                                         int i = Integer.parseInt(message.substring(0, 1));
                                         switch (i) {
@@ -86,8 +83,6 @@ public class Server implements AutoCloseable {
                                             }
                                         });
                                     } catch (Exception e) {
-//                                        System.err.println("Error 2: " + e.getMessage());
-//                                        e.printStackTrace();
                                         break;
                                     }
                                 }
@@ -103,8 +98,6 @@ public class Server implements AutoCloseable {
                     }
                 }
             });
-
-
         } else {
             System.out.println("Could not connect to the database.");
         }
