@@ -1,6 +1,8 @@
 package com.company;
 
 import com.company.common.Transport;
+import com.company.common.data.Log;
+import com.company.common.data.Operation;
 import com.company.database.Database;
 import com.company.database.Interrogation;
 import com.company.common.data.Task;
@@ -44,63 +46,83 @@ public class Server implements AutoCloseable {
                                         clients.forEach(client -> {
                                             try {
                                                 Transport.send("clear", client);
-                                                for (Task task : Interrogation.returnTable()) {
-                                                    Transport.send(task.toString(), client);
-                                                }
+                                                selectEvent(client);
                                             } catch (IOException e) {
                                                 System.err.println("Error 0: " + e.getMessage());
                                             }
                                         });
-                                        String message = Transport.receive(socket);
 
-                                        int i = Integer.parseInt(message.substring(0, 1));
-                                        switch (i) {
-                                            case 0:
-                                                clients.remove(socket);
-                                                break;
-                                            case 1:
-                                                Task task = Task.convertToTask(message.substring(1));
-                                                Interrogation.insertRow(task);
-                                                break;
-                                            case 2:
-                                                Task task1 = Task.convertToTask(message.substring(1));
-                                                Interrogation.updateRow(task1);
-                                                break;
-                                            case 3:
-                                                Interrogation.deleteRow(message.substring(1));
-                                                break;
-                                            default:
-                                                System.out.println("default");
-                                                break;
-                                        }
-                                        clients.forEach(client -> {
-                                            try {
-                                                for (Task t : Interrogation.returnTable()) {
-                                                    Transport.send(t.toString(), client);
-                                                }
-                                            } catch (Exception e) {
-                                                System.err.println("Error 1: " + e.getMessage());
-                                            }
-                                        });
+                                        String message = Transport.receive(socket);
+                                        handleMessageReceived(clients, socket, message);
+                                        sendTasksToClients(clients);
                                     } catch (Exception e) {
                                         break;
                                     }
                                 }
-
                             } catch (Exception e) {
-                                System.err.println("Error 3: " + e.getMessage());
+                                System.err.println("Error 1: " + e.getMessage());
                             } finally {
                                 clients.remove(socket);
                             }
                         });
                     } catch (Exception e) {
-                        System.err.println("Error 4: " + e.getMessage());
                     }
                 }
             });
         } else {
             System.out.println("Could not connect to the database.");
         }
+    }
+
+    private void sendTasksToClients(List<Socket> clients) {
+        clients.forEach(client -> {
+            try {
+                selectEvent(client);
+            } catch (Exception e) {
+                System.err.println("Error 3: " + e.getMessage());
+            }
+        });
+    }
+
+    private void handleMessageReceived(List<Socket> clients, Socket socket, String message) {
+        Log log = new Log();
+        int i = Integer.parseInt(message.substring(0, 1));
+        switch (i) {
+            case 0 -> clients.remove(socket);
+            case 1 -> insertEvent(message, log);
+            case 2 -> updateEvent(message, log);
+            case 3 -> deleteEvent(message, log);
+            default -> System.out.println("default");
+        }
+        Interrogation.log(log);
+    }
+
+    private void selectEvent(Socket client) throws IOException {
+        for (Task t : Interrogation.returnTable()) {
+            Transport.send(t.toString(), client);
+        }
+    }
+
+    private void insertEvent(String message, Log log) {
+        Task task = Task.convertToTask(message.substring(1));
+        task = Interrogation.insertRow(task);
+        assert task != null;
+        log.setTask_id(task.getId());
+        log.setOperation(Operation.INSERT);
+    }
+
+    private void updateEvent(String message, Log log) {
+        Task task = Task.convertToTask(message.substring(1));
+        task = Interrogation.updateRow(task);
+        assert task != null;
+        log.setTask_id(task.getId());
+        log.setOperation(Operation.UPDATE);
+    }
+
+    private void deleteEvent(String message, Log log) {
+        int task_id = Interrogation.deleteRow(Integer.parseInt(message.substring(1)));
+        log.setTask_id(task_id);
+        log.setOperation(Operation.DELETE);
     }
 
     public void stop() throws IOException {
