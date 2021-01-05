@@ -1,27 +1,32 @@
 package common.data;
 
-import java.awt.*;
 import java.io.Serializable;
 
 public class Task implements Serializable {
 
-    private String id;
+    private int id;
     private String summary;
     private String description;
     private Severity severity;
     private Status status;
-    private String project;
 
-
-    public Task(String id) {
-        this.id = id;
-    }
 
     public Task() {
 
     }
 
-    public Task(String id,
+    public Task(
+            String summary,
+            String description,
+            Severity severity,
+            Status status) {
+        this.summary = summary;
+        this.description = description;
+        this.severity = severity;
+        this.status = status;
+    }
+
+    public Task(int id,
                 String summary,
                 String description,
                 Severity severity,
@@ -33,13 +38,12 @@ public class Task implements Serializable {
         this.status = status;
     }
 
-
-    public void setId(String id) {
-        this.id = id;
+    public int getId() {
+        return id;
     }
 
-    public String getId() {
-        return id;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getSummary() {
@@ -66,20 +70,20 @@ public class Task implements Serializable {
         this.severity = severity;
     }
 
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
     public void setSeverity(String severity) {
         switch (severity) {
             case "URGENT" -> this.setSeverity(Severity.URGENT);
             case "IMPORTANT" -> this.setSeverity(Severity.IMPORTANT);
             default -> this.setSeverity(Severity.TRIVIAL);
         }
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public void setStatus(String status) {
@@ -90,6 +94,7 @@ public class Task implements Serializable {
             default -> this.setStatus(Status.NOT_STARTED);
         }
     }
+
 
     @Override
     public String toString() {
@@ -109,7 +114,7 @@ public class Task implements Serializable {
             int startIndexOfId = "Task{id='".length();
             int endIndexOfId = message.indexOf("', summary='");
 
-            String id = message.substring(startIndexOfId, endIndexOfId);
+            int id = Integer.parseInt(message.substring(startIndexOfId, endIndexOfId));
 
             int startIndexOfSummary = endIndexOfId + "', summary='".length();
             int endIndexOfSummary = message.indexOf("', description='");
@@ -139,6 +144,5 @@ public class Task implements Serializable {
 
         }
         return task;
-
     }
 }
