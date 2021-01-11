@@ -9,7 +9,6 @@ import common.Transport;
 public class Client implements AutoCloseable {
 
     public interface ClientCallback {
-
         void onTalk(String message);
     }
 
@@ -34,12 +33,12 @@ public class Client implements AutoCloseable {
 
     @Override
     public void close() {
-//        try {
-//            System.out.println("Connection closed.");
-//            socket.close();
-//            System.exit(0);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            System.out.println("Connection closed.");
+            socket.close();
+            System.exit(0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
