@@ -4,10 +4,10 @@ import java.sql.*;
 
 public class Database {
 
-    private static final String dbURL = "jdbc:derby:taskManager;create=true";
+    private static final String dbURL = "jdbc:derby:task-manager;create=true";
     private static final String dbUser = "admin";
     private static final String dbPassword = "admin";
-    private static final String dbName = "taskManager";
+    private static final String dbName = "task-manager";
 
     public static Connection connection;
     public static Statement statement;
@@ -49,20 +49,22 @@ public class Database {
                             + COLUMN_LOGS_TASK_OPERATION + " varchar(20))";
 
 
-    public static void main(String[] args)  {
-        if (openConnection()) {
-            createTables();
-            closeConnection();
-        }
-    }
+//    public static void main(String[] args)  {
+//        if (openConnection()) {
+//            createTables();
+//            closeConnection();
+//        }
+//    }
 
 
+    private static final String JDBC_DRIVER_NAME = "org.apache.derby.jdbc.ClientDriver";
     public static boolean openConnection() {
         try {
             System.out.println("Open connection to DB.");
+//            Class.forName(JDBC_DRIVER_NAME);
             connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
             return true;
-        } catch (SQLException e) {
+        } catch (SQLException  e) {
             System.err.println("openConnection: " + e.getMessage());
             e.printStackTrace();
             return false;
@@ -94,8 +96,8 @@ public class Database {
    private static void createTables() {
         try {
             statement = connection.createStatement();
-            statement.execute("DROP TABLE " + TABLE_TASKS);
-            statement.execute("DROP TABLE " + TABLE_LOGS);
+//            statement.execute("DROP TABLE " + TABLE_TASKS);
+//            statement.execute("DROP TABLE " + TABLE_LOGS);
             statement.execute(CREATE_TABLE_TASKS);
             statement.execute(CREATE_TABLE_LOGS);
 

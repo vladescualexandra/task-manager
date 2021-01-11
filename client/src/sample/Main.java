@@ -25,8 +25,8 @@ public class Main extends Application {
         Controller controller = loader.getController();
         primaryStage.setOnHiding(e -> controller.shutdown());
 
-        scene.getStylesheets().add("sample/style.css");
-        primaryStage.getIcons().add(new Image("sample/task.png"));
+//        scene.getStylesheets().add("sample/style.css");
+//        primaryStage.getIcons().add(new Image("sample/task.png"));
 
 
         primaryStage.show();
