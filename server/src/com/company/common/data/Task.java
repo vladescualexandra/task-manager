@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Task implements Serializable {
 
-    private String id;
+    private int id;
     private String summary;
     private String description;
     private Severity severity;
@@ -15,7 +15,18 @@ public class Task implements Serializable {
 
     }
 
-    public Task(String id,
+    public Task(
+                String summary,
+                String description,
+                Severity severity,
+                Status status) {
+        this.summary = summary;
+        this.description = description;
+        this.severity = severity;
+        this.status = status;
+    }
+
+    public Task(int id,
                 String summary,
                 String description,
                 Severity severity,
@@ -27,12 +38,12 @@ public class Task implements Serializable {
         this.status = status;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public int getId() {
+        return id;
     }
 
-    public String getId() {
-        return id;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getSummary() {
@@ -103,7 +114,7 @@ public class Task implements Serializable {
             int startIndexOfId = "Task{id='".length();
             int endIndexOfId = message.indexOf("', summary='");
 
-            String id = message.substring(startIndexOfId, endIndexOfId);
+            int id = Integer.parseInt(message.substring(startIndexOfId, endIndexOfId));
 
             int startIndexOfSummary = endIndexOfId + "', summary='".length();
             int endIndexOfSummary = message.indexOf("', description='");

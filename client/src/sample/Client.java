@@ -5,7 +5,6 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import common.Transport;
-import common.data.Task;
 
 public class Client implements AutoCloseable {
 

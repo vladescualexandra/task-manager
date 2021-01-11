@@ -27,19 +27,34 @@ public class Database {
 
 
     private static final String CREATE_TABLE_TASKS = "CREATE TABLE " +
-                TABLE_TASKS + " (" + COLUMN_TASKS_ID + " varchar(20) primary key, "
+                TABLE_TASKS + " (" + COLUMN_TASKS_ID + " int primary key NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), "
                                 + COLUMN_TASKS_SUMMARY + " varchar(50), "
                                 + COLUMN_TASKS_DESCRIPTION + " varchar(500), "
                                 + COLUMN_TASKS_SEVERITY + " varchar(50), "
                                 + COLUMN_TASKS_STATUS + " varchar(50))";
 
 
-//    public static void main(String[] args)  {
-//        if (openConnection()) {
-//            createTables();
-//            closeConnection();
-//        }
-//    }
+
+    public static final String TABLE_LOGS = "logs";
+
+    public static final String COLUMN_LOGS_ID = "id";
+    public static final String COLUMN_LOGS_TASK_ID = "task_id";
+    public static final String COLUMN_LOGS_TASK_OPERATION = "operation";
+
+
+
+    private static final String CREATE_TABLE_LOGS = "CREATE TABLE " + TABLE_LOGS
+                            + " (" + COLUMN_TASKS_ID + " int primary key NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
+                            + COLUMN_LOGS_TASK_ID + " int, "
+                            + COLUMN_LOGS_TASK_OPERATION + " varchar(20))";
+
+
+    public static void main(String[] args)  {
+        if (openConnection()) {
+            createTables();
+            closeConnection();
+        }
+    }
 
 
     public static boolean openConnection() {
@@ -80,7 +95,9 @@ public class Database {
         try {
             statement = connection.createStatement();
             statement.execute("DROP TABLE " + TABLE_TASKS);
+            statement.execute("DROP TABLE " + TABLE_LOGS);
             statement.execute(CREATE_TABLE_TASKS);
+            statement.execute(CREATE_TABLE_LOGS);
 
         } catch (SQLException e) {
             System.err.println("createTables: " + e.getMessage());
