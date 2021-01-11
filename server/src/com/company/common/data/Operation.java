@@ -6,7 +6,12 @@ public enum Operation {
     UPDATE ("UPDATE"),
     DELETE ("DELETE");
 
+<<<<<<< HEAD
     private String operation;
+=======
+
+    private final String operation;
+>>>>>>> master
 
     Operation(String operation) {
         this.operation = operation;

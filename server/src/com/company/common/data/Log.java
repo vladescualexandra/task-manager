@@ -1,13 +1,22 @@
 package com.company.common.data;
 
+<<<<<<< HEAD
 public class Log {
+=======
+import java.io.Serializable;
+
+public class Log implements Serializable {
+>>>>>>> master
 
     private int id;
     private int task_id;
     private Operation operation;
 
     public Log() {
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
     }
 
     public Log(int task_id, Operation operation) {
@@ -44,4 +53,16 @@ public class Log {
     public void setOperation(Operation operation) {
         this.operation = operation;
     }
+<<<<<<< HEAD
+=======
+
+    @Override
+    public String toString() {
+        return "Log{" +
+                "id=" + id +
+                ", task_id=" + task_id +
+                ", operation=" + operation.toString() +
+                '}';
+    }
+>>>>>>> master
 }
