@@ -59,9 +59,7 @@ Button {
    -fx-background-color: rgb(48, 107, 79);
 }
 
-.table-row-cell:selected .text {
-       -fx-fill: rgb(48, 107, 79) ;
-}
+
 
 
 

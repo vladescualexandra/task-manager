@@ -96,7 +96,6 @@ public class Interrogation extends Database {
 
             preparedStatement.execute();
 
-
             return returnTable().get(returnTable().size() - 1);
         } catch (SQLException e) {
             System.err.println("insertRow: " + e.getMessage());
@@ -143,7 +142,7 @@ public class Interrogation extends Database {
         }
     }
 
-    public static boolean log(Log log) {
+    public static void log(Log log) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "INSERT INTO " + TABLE_LOGS + "("
@@ -156,10 +155,8 @@ public class Interrogation extends Database {
 
             preparedStatement.execute();
 
-            return true;
         } catch (SQLException e) {
-            System.err.println("insertRow: " + e.getMessage());
-            return false;
+            System.err.println("log: " + e.getMessage());
         }
     }
 }

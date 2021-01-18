@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Tue Jan 05 16:37:16 EET 2021:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0176-d2fb-0be0-0000077b44c8 
+Mon Jan 18 12:00:10 EET 2021:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0177-14f0-05d8-0000077bb6d8 
 on database directory E:\git\task-manager\server\taskManager with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@3764951d 
 Loaded from file:/E:/git/task-manager/server/lib/derby.jar
 java.vendor=Oracle Corporation

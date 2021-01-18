@@ -4,10 +4,10 @@ import java.sql.*;
 
 public class Database {
 
-    private static final String dbURL = "jdbc:derby:taskManager;create=true";
+    private static final String dbName = "taskManager";
     private static final String dbUser = "admin";
     private static final String dbPassword = "admin";
-    private static final String dbName = "taskManager";
+    private static final String dbURL = "jdbc:derby:" + dbName + ";create=true";
 
     public static Connection connection;
     public static Statement statement;

@@ -53,9 +53,7 @@ public class Controller {
         setStatusFilter();
         setColumns();
         setContextMenu();
-
         add.setOnAction(insertEvent());
-
         search.setOnAction(actionEvent -> filterList());
     }
 
@@ -135,7 +133,11 @@ public class Controller {
         add_severity.setText(selectedItem.getSeverity().toString());
         add_status.setText(selectedItem.getStatus().toString());
         add.setText("update");
-        add.setOnAction(actionEvent -> {
+        add.setOnAction(updateTask());
+    }
+
+    private EventHandler<ActionEvent> updateTask() {
+        return actionEvent -> {
             try {
                 Task task = list.getSelectionModel().getSelectedItem();
                 task.setSummary(add_summary.getText().trim());
@@ -147,7 +149,7 @@ public class Controller {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        });
+        };
     }
 
     private void cleanView() {
@@ -156,6 +158,7 @@ public class Controller {
         add_severity.setText("severity");
         add_status.setText("status");
         add.setText("add a new task");
+        add.setOnAction(insertEvent());
         error.setVisible(false);
     }
 
@@ -250,7 +253,6 @@ public class Controller {
             }
         }
 
-        System.out.println(filteredList.size());
         ObservableList<Task> obsList = FXCollections.observableArrayList(filteredList);
         list.setItems(obsList);
 

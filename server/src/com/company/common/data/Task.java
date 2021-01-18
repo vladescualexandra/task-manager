@@ -15,29 +15,6 @@ public class Task implements Serializable {
 
     }
 
-    public Task(
-                String summary,
-                String description,
-                Severity severity,
-                Status status) {
-        this.summary = summary;
-        this.description = description;
-        this.severity = severity;
-        this.status = status;
-    }
-
-    public Task(int id,
-                String summary,
-                String description,
-                Severity severity,
-                Status status) {
-        this.id = id;
-        this.summary = summary;
-        this.description = description;
-        this.severity = severity;
-        this.status = status;
-    }
-
     public int getId() {
         return id;
     }
@@ -95,7 +72,6 @@ public class Task implements Serializable {
         }
     }
 
-
     @Override
     public String toString() {
         return "Task{" +
@@ -144,6 +120,5 @@ public class Task implements Serializable {
 
         }
         return task;
-
     }
 }
