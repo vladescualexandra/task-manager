@@ -1,0 +1,65 @@
+* {
+    -fx-background-color: rgb(32, 32, 32);
+    -fx-color: rgb(48, 107, 79);
+    -fx-text-fill:rgb(202, 198, 205);
+
+}
+
+#severity, #status, #add_severity, #add_status {
+    -fx-border-color: rgb(48, 107, 79);
+    -fx-border-radius: 7px;
+    -fx-padding: 2px;
+}
+
+Button {
+    -fx-background-color: rgb(48, 107, 79);
+    -fx-text-fill:rgb(202, 198, 205);
+    -fx-padding:10px;
+}
+
+#filters {
+    -fx-font-size: 11pt;
+    -fx-text-fill:rgb(48, 107, 79);
+}
+
+
+
+.text-field {
+    -fx-background-color: transparent;
+    -fx-border-color: rgb(48, 107, 79);
+    -fx-color: rgb(202, 198, 205);
+    -fx-text-fill:rgb(202, 198, 205);
+    -fx-border-radius: 7px;
+    -fx-border-width: 1px;
+    -fx-padding: 5px;
+
+}
+
+
+
+#error {
+    -fx-font-weight: bold;
+    -fx-text-fill: rgb(177, 85, 70);
+}
+
+.table-view .column-header {
+    -fx-font-weight: bold;
+    -fx-text-fill: rgb(202, 198, 205);
+    -fx-color: pink;
+}
+
+.table-row-cell {
+    -fx-fill: rgb(202, 198, 205);
+    -fx-border-color: rgb(48, 107, 79);
+    -fx-text-fill: rgb(202, 198, 205);
+    -fx-padding: 50%;    
+}
+
+.table-row-cell:selected {
+   -fx-background-color: rgb(48, 107, 79);
+}
+
+
+
+
+
